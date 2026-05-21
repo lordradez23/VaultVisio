@@ -18,6 +18,9 @@
   --color-emerald-light: var(--emerald-light);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  
+  --animate-scan: scan 4s linear infinite;
+  --animate-spin-slow: spin 8s linear infinite;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,7 +29,6 @@
     --foreground: #f8f8f8;
   }
 }
-
 
 @layer utilities {
   .glass {
@@ -51,6 +53,13 @@
   to {
     background-position: 200% center;
   }
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100%); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(400px); opacity: 0; }
 }
 
 html {

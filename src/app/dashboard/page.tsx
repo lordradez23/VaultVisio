@@ -158,30 +158,55 @@ export default function Dashboard() {
             {/* AI Directives */}
             <div className="border border-gold/30 rounded-3xl p-1 bg-gradient-to-b from-gold/10 to-transparent relative overflow-hidden group">
               <div className="absolute inset-0 bg-gold/5 blur-2xl group-hover:bg-gold/10 transition-colors" />
+              {/* Dynamic Scanning Line */}
+              <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-gold/40 to-transparent animate-[scan_4s_linear_infinite]" />
+              
               <div className="glass-dark rounded-[22px] p-6 h-full relative z-10 border border-white/5">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center border border-gold/40">
-                    <Sparkles className="w-4 h-4 text-gold animate-pulse" />
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center border border-gold/40">
+                      <Sparkles className="w-4 h-4 text-gold animate-pulse" />
+                    </div>
+                    <h2 className="text-white font-bold text-lg">AI Directives</h2>
                   </div>
-                  <h2 className="text-white font-bold text-lg">AI Directives</h2>
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-gold animate-ping" />
+                    <span className="text-[10px] text-gold font-bold uppercase tracking-widest">Active</span>
+                  </div>
                 </div>
                 
                 <div className="space-y-4">
-                  <div className="bg-black/40 border border-gold/20 rounded-xl p-4">
-                    <div className="flex gap-2 items-start mb-2">
+                  {/* Directive 1: Liquidity Sweep */}
+                  <div className="bg-black/40 border border-gold/20 rounded-xl p-4 hover:bg-black/60 transition-colors group/item">
+                    <div className="flex gap-3 items-start mb-3">
                        <Zap className="w-4 h-4 text-gold mt-1 flex-shrink-0" />
-                       <p className="text-sm text-gray-300 leading-relaxed">
-                         Detected <span className="text-white font-bold">$42,000</span> idle cash in primary reserve. Recommend sweeping into Quantum Vault to secure an estimated <span className="text-emerald-400 font-bold">+$1,850</span> annual return.
-                       </p>
+                       <div>
+                         <p className="text-sm text-gray-300 leading-relaxed">
+                           Detected <span className="text-white font-bold">$42,000</span> idle cash in primary reserve.
+                         </p>
+                         <p className="text-[11px] text-gray-500 mt-0.5">Recommend Quantum Vault sweep. <br/> Yield: <span className="text-emerald-400 font-bold">+$1,850</span> Est.</p>
+                       </div>
                     </div>
-                    <button className="w-full mt-3 py-2.5 rounded-lg bg-gold/10 hover:bg-gold/20 border border-gold/30 text-gold text-xs font-bold transition-colors">
+                    <button className="w-full py-2.5 rounded-lg bg-gold/10 hover:bg-gold/30 border border-gold/30 text-gold text-xs font-bold transition-all active:scale-[0.98]">
                       Execute Auto-Sweep
                     </button>
                   </div>
 
-                  <div className="bg-black/40 border border-white/10 rounded-xl p-4 opacity-70 hover:opacity-100 transition-opacity flex gap-3 items-center">
-                     <ShieldCheck className="w-8 h-8 text-emerald-400 opacity-50" />
-                     <p className="text-xs text-gray-400">All external accounts synced successfully. Security protocols holding at Tier 1.</p>
+                  {/* Directive 2: Portfolio Pulse */}
+                  <div className="bg-black/40 border border-white/10 rounded-xl p-4 opacity-70 hover:opacity-100 transition-opacity flex gap-3 items-center cursor-pointer">
+                     <RefreshCw className="w-4 h-4 text-gray-400 animate-spin-slow" />
+                     <div>
+                       <p className="text-[11px] text-gray-400">Market Arbitrage Filter <span className="text-emerald-400">Stable</span></p>
+                       <p className="text-[10px] text-gray-600">Checking global sovereign yields...</p>
+                     </div>
+                  </div>
+
+                  {/* Directive 3: Security Protocol */}
+                  <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-3 flex gap-3 items-center">
+                     <ShieldCheck className="w-5 h-5 text-emerald-400 opacity-60" />
+                     <p className="text-[10px] text-emerald-400/80 font-bold uppercase tracking-widest">
+                       All accounts synced <span className="opacity-40">•</span> Secure
+                     </p>
                   </div>
                 </div>
               </div>
