@@ -167,72 +167,73 @@ export default function Dashboard() {
                <div className="flex flex-col gap-8">
                  <AdminCommandCenter />
                  {/* User Management for Admins */}
-               <div className="glass-dark border border-white/5 rounded-3xl p-8 flex flex-col">
-                  <div className="flex justify-between items-center mb-8">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
-                        <Users className="w-5 h-5 text-gray-400" />
+                 <div className="glass-dark border border-white/5 rounded-3xl p-8 flex flex-col">
+                    <div className="flex justify-between items-center mb-8">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+                          <Users className="w-5 h-5 text-gray-400" />
+                        </div>
+                        <h2 className="text-white text-xl font-bold">Client Directory</h2>
                       </div>
-                      <h2 className="text-white text-xl font-bold">Client Directory</h2>
+                      <button className="text-xs font-bold text-gold border border-gold/20 px-4 py-2 rounded-lg hover:bg-gold/10 transition-colors uppercase tracking-widest">Generate Report</button>
                     </div>
-                    <button className="text-xs font-bold text-gold border border-gold/20 px-4 py-2 rounded-lg hover:bg-gold/10 transition-colors uppercase tracking-widest">Generate Report</button>
-                  </div>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                      <thead>
-                        <tr className="border-b border-white/5">
-                          <th className="py-4 text-[10px] text-gray-500 uppercase tracking-widest font-bold">Client Name</th>
-                          <th className="py-4 text-[10px] text-gray-500 uppercase tracking-widest font-bold">Digital Identity</th>
-                          <th className="py-4 text-[10px] text-gray-500 uppercase tracking-widest font-bold text-right">Balance</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-white/5">
-                        {users.filter(u => u.role === 'USER').map((user, i) => (
-                          <tr key={i} className="group hover:bg-white/5 transition-colors">
-                            <td className="py-4 font-bold text-white text-sm">{user.fullName}</td>
-                            <td className="py-4 font-mono text-gray-500 text-xs">{user.email}</td>
-                            <td className="py-4 text-right font-bold text-emerald-400 tracking-tight text-sm">${user.balance.toLocaleString()}</td>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left border-collapse">
+                        <thead>
+                          <tr className="border-b border-white/5">
+                            <th className="py-4 text-[10px] text-gray-500 uppercase tracking-widest font-bold">Client Name</th>
+                            <th className="py-4 text-[10px] text-gray-500 uppercase tracking-widest font-bold">Digital Identity</th>
+                            <th className="py-4 text-[10px] text-gray-500 uppercase tracking-widest font-bold text-right">Balance</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-               </div>
+                        </thead>
+                        <tbody className="divide-y divide-white/5">
+                          {users.filter(u => u.role === 'USER').map((user, i) => (
+                            <tr key={i} className="group hover:bg-white/5 transition-colors">
+                              <td className="py-4 font-bold text-white text-sm">{user.fullName}</td>
+                              <td className="py-4 font-mono text-gray-500 text-xs">{user.email}</td>
+                              <td className="py-4 text-right font-bold text-emerald-400 tracking-tight text-sm">${user.balance.toLocaleString()}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                 </div>
                </div>
             ) : (
-               /* Portfolio Velocity for Users */
-               <div className="glass-dark border border-white/5 rounded-3xl p-8 h-[450px] flex flex-col relative overflow-hidden group">
-                 <div className="flex justify-between items-end mb-8 relative z-10">
-                   <div>
-                     <h2 className="text-white text-xl font-bold mb-1">Portfolio Velocity</h2>
-                     <p className="text-gray-500 text-sm">6 Month Trajectory</p>
+               <div className="flex flex-col gap-8">
+                 {/* Portfolio Velocity for Users */}
+                 <div className="glass-dark border border-white/5 rounded-3xl p-8 h-[450px] flex flex-col relative overflow-hidden group">
+                   <div className="flex justify-between items-end mb-8 relative z-10">
+                     <div>
+                       <h2 className="text-white text-xl font-bold mb-1">Portfolio Velocity</h2>
+                       <p className="text-gray-500 text-sm">6 Month Trajectory</p>
+                     </div>
+                     <div className="flex gap-2 bg-black/50 p-1 rounded-lg border border-white/10">
+                       {['1D', '1W', '1M', '6M', '1Y', 'ALL'].map((time, idx) => (
+                         <button key={time} className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${idx === 3 ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-white'}`}>
+                           {time}
+                         </button>
+                       ))}
+                     </div>
                    </div>
-                   <div className="flex gap-2 bg-black/50 p-1 rounded-lg border border-white/10">
-                     {['1D', '1W', '1M', '6M', '1Y', 'ALL'].map((time, idx) => (
-                       <button key={time} className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${idx === 3 ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-white'}`}>
-                         {time}
-                       </button>
-                     ))}
+                   <div className="flex-1 w-full relative z-10">
+                     <svg className="w-full h-full" viewBox="0 0 100 40" preserveAspectRatio="none">
+                       <defs>
+                         <linearGradient id="main-chart-grad" x1="0" y1="0" x2="0" y2="1">
+                           <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.4" />
+                           <stop offset="90%" stopColor="#D4AF37" stopOpacity="0" />
+                         </linearGradient>
+                         <filter id="glow">
+                           <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+                           <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                         </filter>
+                       </defs>
+                       <path fill="url(#main-chart-grad)" d="M0 40 L0 30 Q 10 25, 20 28 T 40 20 T 60 15 T 80 5 T 100 8 L100 40 Z" />
+                       <path fill="none" stroke="#D4AF37" strokeWidth="0.8" filter="url(#glow)" d="M0 30 Q 10 25, 20 28 T 40 20 T 60 15 T 80 5 T 100 8" />
+                     </svg>
                    </div>
                  </div>
-                 <div className="flex-1 w-full relative z-10">
-                   <svg className="w-full h-full" viewBox="0 0 100 40" preserveAspectRatio="none">
-                     <defs>
-                       <linearGradient id="main-chart-grad" x1="0" y1="0" x2="0" y2="1">
-                         <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.4" />
-                         <stop offset="90%" stopColor="#D4AF37" stopOpacity="0" />
-                       </linearGradient>
-                       <filter id="glow">
-                         <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
-                         <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                       </filter>
-                     </defs>
-                     <path fill="url(#main-chart-grad)" d="M0 40 L0 30 Q 10 25, 20 28 T 40 20 T 60 15 T 80 5 T 100 8 L100 40 Z" />
-                     <path fill="none" stroke="#D4AF37" strokeWidth="0.8" filter="url(#glow)" d="M0 30 Q 10 25, 20 28 T 40 20 T 60 15 T 80 5 T 100 8" />
-                   </svg>
-                 </div>
-                 </div>
-                 
+
                  <SovereignExchange />
 
                  <div className="glass-dark border border-white/5 rounded-3xl p-8 flex flex-col">
@@ -260,7 +261,6 @@ export default function Dashboard() {
                  </div>
                </div>
             )}
-
           </div>
 
           {/* Right Column */}
