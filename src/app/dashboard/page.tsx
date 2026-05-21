@@ -238,7 +238,7 @@ export default function Dashboard() {
                  <div className="glass-dark border border-white/5 rounded-3xl p-8 flex flex-col">
                    <div className="flex justify-between items-center mb-8">
                      <h2 className="text-white text-xl font-bold">Ledger Feed</h2>
-                     <Link href="#" className="text-xs font-bold text-gold hover:text-white transition-colors uppercase tracking-widest">View All</Link>
+                     <Link href="/ledger" className="text-xs font-bold text-gold hover:text-white transition-colors uppercase tracking-widest">View All</Link>
                    </div>
                    <div className="flex flex-col gap-2">
                      <div className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10">
