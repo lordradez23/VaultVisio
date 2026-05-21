@@ -5,26 +5,10 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { ArrowLeft, User, ShieldCheck, Fingerprint, Camera, Bell, Settings, CreditCard, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import IrisScanner from '@/components/IrisScanner';
 
 export default function ProfilePage() {
   const { currentUser, logout } = useAuth();
-  const [isCalibrating, setIsCalibrating] = useState(false);
-  const [progress, setProgress] = useState(0);
-
-  const startCalibration = () => {
-    setIsCalibrating(true);
-    setProgress(0);
-    const interval = setInterval(() => {
-      setProgress(p => {
-        if (p >= 100) {
-          clearInterval(interval);
-          setTimeout(() => setIsCalibrating(false), 1000);
-          return 100;
-        }
-        return p + 2;
-      });
-    }, 50);
-  };
 
   if (!currentUser) return null;
 
@@ -102,39 +86,8 @@ export default function ProfilePage() {
                         <h3 className="text-white text-lg font-bold mb-2">Biometric Calibration</h3>
                         <p className="text-gray-400 text-sm mb-8">Maintain high-fidelity identity markers by refreshing your biometric baseline weekly.</p>
                         
-                        <div className="relative h-48 bg-black/50 rounded-2xl border border-white/10 mb-8 flex items-center justify-center overflow-hidden">
-                            <AnimatePresence>
-                                {isCalibrating ? (
-                                    <div className="flex flex-col items-center gap-4">
-                                        <motion.div 
-                                            initial={{ scale: 0 }}
-                                            animate={{ scale: 1 }}
-                                            className="w-20 h-20 rounded-full border-2 border-gold flex items-center justify-center"
-                                        >
-                                            <div className="w-16 h-16 rounded-full border-[10px] border-gold/20 border-t-gold animate-spin" />
-                                        </motion.div>
-                                        <p className="text-gold text-xs font-bold uppercase tracking-widest animate-pulse">Syncing... {progress}%</p>
-                                    </div>
-                                ) : (
-                                    <button 
-                                        onClick={startCalibration}
-                                        className="group h-full w-full flex flex-col items-center justify-center gap-4 hover:bg-gold/5 transition-colors"
-                                    >
-                                        <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-gold/50 transition-colors">
-                                            <Fingerprint className="w-8 h-8 text-gray-400 group-hover:text-gold transition-colors" />
-                                        </div>
-                                        <span className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em] group-hover:text-gold transition-colors">Start Identity Refresh</span>
-                                    </button>
-                                )}
-                            </AnimatePresence>
-                            {/* Scanning line for calibration */}
-                            {isCalibrating && (
-                                <motion.div 
-                                    className="absolute top-0 left-0 w-full h-1 bg-gold shadow-[0_0_15px_gold]"
-                                    animate={{ top: ["0%", "100%", "0%"] }}
-                                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                                />
-                            )}
+                        <div className="relative h-64 bg-black/50 rounded-2xl border border-white/10 mb-8 flex items-center justify-center overflow-hidden">
+                            <IrisScanner onComplete={() => alert('Biometric Baseline Synchronized.')} />
                         </div>
                     </div>
                 </div>
