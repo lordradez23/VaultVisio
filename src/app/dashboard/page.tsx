@@ -7,6 +7,8 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import AIChat from '@/components/AIChat';
+import SovereignExchange from '@/components/SovereignExchange';
+import AdminCommandCenter from '@/components/AdminCommandCenter';
 
 export default function Dashboard() {
   const { currentUser, logout, sendMoney, users } = useAuth();
@@ -162,7 +164,9 @@ export default function Dashboard() {
           <div className="lg:col-span-2 flex flex-col gap-8">
             
             {isAdmin ? (
-               /* User Management for Admins */
+               <div className="flex flex-col gap-8">
+                 <AdminCommandCenter />
+                 {/* User Management for Admins */}
                <div className="glass-dark border border-white/5 rounded-3xl p-8 flex flex-col">
                   <div className="flex justify-between items-center mb-8">
                     <div className="flex items-center gap-4">
@@ -193,6 +197,7 @@ export default function Dashboard() {
                       </tbody>
                     </table>
                   </div>
+               </div>
                </div>
             ) : (
                /* Portfolio Velocity for Users */
@@ -226,34 +231,36 @@ export default function Dashboard() {
                      <path fill="none" stroke="#D4AF37" strokeWidth="0.8" filter="url(#glow)" d="M0 30 Q 10 25, 20 28 T 40 20 T 60 15 T 80 5 T 100 8" />
                    </svg>
                  </div>
+                 </div>
+                 
+                 <SovereignExchange />
+
+                 <div className="glass-dark border border-white/5 rounded-3xl p-8 flex flex-col">
+                   <div className="flex justify-between items-center mb-8">
+                     <h2 className="text-white text-xl font-bold">Ledger Feed</h2>
+                     <Link href="#" className="text-xs font-bold text-gold hover:text-white transition-colors uppercase tracking-widest">View All</Link>
+                   </div>
+                   <div className="flex flex-col gap-2">
+                     <div className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10">
+                       <div className="flex items-center gap-4">
+                         <div className="w-12 h-12 rounded-full flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20">
+                           <ArrowDownRight className="w-5 h-5 text-emerald-400" />
+                         </div>
+                         <div>
+                           <h4 className="text-white font-bold mb-1">Signup Distribution</h4>
+                           <p className="text-gray-500 text-xs text-emerald-400/70 font-bold uppercase tracking-widest">Sovereign Foundation</p>
+                         </div>
+                       </div>
+                       <div className="text-right">
+                         <h4 className="font-bold tracking-tight mb-1 text-emerald-400">+$1,000.00</h4>
+                         <p className="text-gray-600 text-[10px] font-bold uppercase tracking-tighter">Identity Initialized</p>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
                </div>
             )}
 
-            {!isAdmin && (
-              <div className="glass-dark border border-white/5 rounded-3xl p-8 flex flex-col">
-                <div className="flex justify-between items-center mb-8">
-                  <h2 className="text-white text-xl font-bold">Ledger Feed</h2>
-                  <Link href="#" className="text-xs font-bold text-gold hover:text-white transition-colors uppercase tracking-widest">View All</Link>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20">
-                        <ArrowDownRight className="w-5 h-5 text-emerald-400" />
-                      </div>
-                      <div>
-                        <h4 className="text-white font-bold mb-1">Signup Distribution</h4>
-                        <p className="text-gray-500 text-xs text-emerald-400/70 font-bold uppercase tracking-widest">Sovereign Foundation</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <h4 className="font-bold tracking-tight mb-1 text-emerald-400">+$1,000.00</h4>
-                      <p className="text-gray-600 text-[10px] font-bold uppercase tracking-tighter">Identity Initialized</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Right Column */}
