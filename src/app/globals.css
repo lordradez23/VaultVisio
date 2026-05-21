@@ -1,42 +1,41 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
-  --gold: #D4AF37;
-  --gold-dark: #C5A234;
-  --emerald: #064e3b;
-  --emerald-light: #10b981;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-gold: var(--gold);
-  --color-gold-dark: var(--gold-dark);
-  --color-emerald: var(--emerald);
-  --color-emerald-light: var(--emerald-light);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  
-  --animate-scan: scan 4s linear infinite;
-  --animate-spin-slow: spin 8s linear infinite;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #020202;
-    --foreground: #f8f8f8;
+    --background: #ffffff;
+    --foreground: #0a0a0a;
+    --color-gold: #D4AF37;
+    --color-gold-dark: #C5A234;
+    --color-emerald: #064e3b;
+    --color-emerald-light: #10b981;
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background: #020202;
+      --foreground: #f8f8f8;
+      --color-background: #020202;
+      --color-foreground: #f8f8f8;
+    }
   }
 }
 
 @layer utilities {
   .glass {
-    @apply backdrop-blur-md bg-white/10 border border-white/20;
+    backdrop-filter: blur(12px);
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
   
   .glass-dark {
-    @apply backdrop-blur-xl bg-black/40 border border-white/10;
+    backdrop-filter: blur(24px);
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .text-shadow-gold {
@@ -44,9 +43,11 @@
   }
 
   .animate-shimmer {
-    @apply bg-clip-text text-transparent;
     background-size: 200% auto;
     animation: shimmer 4s linear infinite;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
   }
 }
 
@@ -77,6 +78,6 @@ body {
 }
 
 ::selection {
-  background: var(--gold);
+  background: var(--color-gold);
   color: black;
 }
