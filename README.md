@@ -4,20 +4,20 @@ VaultVisio is a state-of-the-art, AI-powered banking and wealth visualization ec
 
 ![VaultVisio Preview](public/next.svg) <!-- Placeholder for actual screenshot -->
 
-## 🌟 Core Pillars
+## Core Pillars
 
-### 🧠 Predictive Wealth Intelligence
+### Predictive Wealth Intelligence
 Harnessing advanced machine learning models to anticipate market volatility and automate asset allocation. Our **AI Directives** engine provides real-time, executable strategies based on global market liquidity and historical trends.
 
-### 🛡️ Sovereign Security & Autonomy
+### Sovereign Security & Autonomy
 Built on a foundation of zero-trust architecture. VaultVisio integrates multi-modal biometric authentication (Face/Advanced Fingerprint) and hardware-level security protocols to ensure absolute sovereignty over your digital assets.
 
-### 💎 Ultra-Premium Visualization
+### Ultra-Premium Visualization
 A bespoke interface crafted for clarity and impact. Utilizing **Next.js 16**, **React 19**, and **Tailwind CSS 4**, VaultVisio delivers a fluid, dark-mode experience optimized for real-time data streaming and complex portfolio tracking.
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 - **Core Framework**: [Next.js 16.2](https://nextjs.org/) (App Router Architecture)
 - **UI Architecture**: [React 19.2](https://reactjs.org/)
@@ -27,7 +27,7 @@ A bespoke interface crafted for clarity and impact. Utilizing **Next.js 16**, **
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Requirements
 - Node.js 18.x or higher
@@ -50,7 +50,7 @@ Navigate to `http://localhost:3000` to access the VaultVisio Intelligence dashbo
 
 ---
 
-## 📂 Project Architecture
+## Project Architecture
 
 ```text
 src/
@@ -62,7 +62,7 @@ src/
 
 ---
 
-## 📄 License
+## License
 
 Proprietary and Confidential. Registered Trademark of VaultVisio Systems Inc. 
 
