@@ -6,6 +6,7 @@ import { ArrowLeft, Bell, Search, Sparkles, Send, ArrowUpRight, ArrowDownRight, 
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import AIChat from '@/components/AIChat';
 
 export default function Dashboard() {
   const { currentUser, logout, sendMoney, users } = useAuth();
@@ -420,6 +421,7 @@ export default function Dashboard() {
           </div>
         </div>
       </main>
+      <AIChat />
     </div>
   );
 }

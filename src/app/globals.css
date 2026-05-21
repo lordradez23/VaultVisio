@@ -7,8 +7,9 @@
   --gold-dark: #C5A234;
   --emerald: #064e3b;
   --emerald-light: #10b981;
-  
-  /* Tailwind 4 theme mapping */
+}
+
+@theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-gold: var(--gold);
@@ -26,22 +27,16 @@
   :root {
     --background: #020202;
     --foreground: #f8f8f8;
-    --color-background: #020202;
-    --color-foreground: #f8f8f8;
   }
 }
 
 @layer utilities {
   .glass {
-    backdrop-filter: blur(12px);
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    @apply backdrop-blur-md bg-white/10 border border-white/20;
   }
   
   .glass-dark {
-    backdrop-filter: blur(24px);
-    background-color: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    @apply backdrop-blur-xl bg-black/40 border border-white/10;
   }
 
   .text-shadow-gold {
