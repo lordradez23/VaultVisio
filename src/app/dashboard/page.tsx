@@ -97,10 +97,10 @@ export default function Dashboard() {
               <span className="absolute top-2 right-2 w-2 h-2 bg-gold rounded-full border border-black animate-pulse" />
             </button>
             <div className="flex items-center gap-3 pl-4 border-l border-white/10">
-              <div className="text-right hidden sm:block">
+              <Link href="/profile" className="text-right hidden sm:block hover:opacity-70 transition-opacity">
                 <p className="text-sm font-bold">{currentUser.fullName}</p>
                 <p className="text-[10px] text-gold tracking-widest uppercase">{isAdmin ? 'Master Administrator' : 'Sovereign Tier'}</p>
-              </div>
+              </Link>
               <button 
                 onClick={logout}
                 className="w-10 h-10 rounded-full bg-gradient-to-br from-gold/80 to-yellow-800 flex items-center justify-center font-bold text-black border-2 border-black ring-1 ring-gold/50 hover:brightness-125 transition-all group"
