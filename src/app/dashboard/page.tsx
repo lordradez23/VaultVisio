@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Bell, Search, Sparkles, Send, ArrowUpRight, ArrowDownRight, RefreshCw, ShieldCheck, Zap, LogOut, Users, Settings, Activity } from 'lucide-react';
+import { ArrowLeft, Bell, Search, Sparkles, Send, ArrowUpRight, ArrowDownRight, RefreshCw, ShieldCheck, Zap, LogOut, Users, Settings, Activity, CreditCard } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 export default function Dashboard() {
   const { currentUser, logout, sendMoney, users } = useAuth();
@@ -13,6 +14,31 @@ export default function Dashboard() {
   const [transferEmail, setTransferEmail] = useState('');
   const [transferAmount, setTransferAmount] = useState('');
   const [status, setStatus] = useState<{ type: 'success' | 'error', msg: string } | null>(null);
+
+  // 3D Tilt Logic
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const mouseXSpring = useSpring(x);
+  const mouseYSpring = useSpring(y);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
 
   if (!currentUser) {
     if (typeof window !== 'undefined') {
@@ -273,6 +299,69 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
+
+            {/* Active Card - Restored for Users with 3D Tilt */}
+            {!isAdmin && (
+              <div className="flex flex-col gap-4">
+                <div className="flex justify-between items-center px-1">
+                  <h2 className="text-white font-bold text-sm">Sovereign Card</h2>
+                  <div className="flex items-center gap-1.5 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-[9px] text-emerald-400 uppercase tracking-widest font-bold">Encrypted</span>
+                  </div>
+                </div>
+                
+                <motion.div
+                  onMouseMove={handleMouseMove}
+                  onMouseLeave={handleMouseLeave}
+                  style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+                  className="relative h-[220px] w-full rounded-2xl bg-gradient-to-br from-[#1a1a1a] to-[#050505] border border-white/10 p-6 flex flex-col justify-between overflow-hidden group shadow-[0_20px_50px_rgba(0,0,0,0.5)] cursor-pointer"
+                >
+                  {/* Glowing Edge */}
+                  <div className="absolute inset-0 border border-gold/0 group-hover:border-gold/20 transition-colors rounded-2xl pointer-events-none" />
+                  
+                  {/* Moving Shimmer Reflection */}
+                  <motion.div 
+                    style={{ x: useTransform(mouseXSpring, [-0.5, 0.5], ["-100%", "100%"]), transformStyle: "preserve-3d" }}
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-12 pointer-events-none" 
+                  />
+
+                  <div className="flex justify-between items-start relative z-10" style={{ transform: "translateZ(50px)" }}>
+                    <div className="flex flex-col">
+                      <span className="text-gold font-bold tracking-[0.25em] text-xs">VAULTVISIO</span>
+                      <span className="text-[8px] text-gray-500 font-mono tracking-widest mt-1">BLACK SOVEREIGN</span>
+                    </div>
+                    <div className="flex items-center">
+                       <div className="w-8 h-8 rounded-full bg-[#EB001B] opacity-90" />
+                       <div className="w-8 h-8 rounded-full bg-[#F79E1B] opacity-80 -ml-4" />
+                    </div>
+                  </div>
+
+                  <div className="relative z-10" style={{ transform: "translateZ(40px)" }}>
+                    <div className="w-10 h-8 bg-gradient-to-br from-[#FFD700] to-[#B8860B] rounded-md opacity-80 mb-4 shadow-inner" />
+                    <div className="text-white tracking-[0.25em] font-mono text-lg opacity-90">
+                      **** **** **** 1337
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-end relative z-10" style={{ transform: "translateZ(30px)" }}>
+                    <div>
+                      <p className="text-[8px] text-gray-500 uppercase tracking-widest mb-1">Cardholder</p>
+                      <p className="text-[11px] text-white font-bold tracking-wider">{currentUser.fullName}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[8px] text-gray-500 uppercase tracking-widest mb-1">Expiry</p>
+                      <p className="text-[11px] text-white font-bold">12 / 30</p>
+                    </div>
+                  </div>
+                </motion.div>
+                
+                <div className="flex items-center gap-2">
+                  <button className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-gray-400 text-[10px] font-bold uppercase tracking-widest transition-all">Details</button>
+                  <button className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-gray-400 text-[10px] font-bold uppercase tracking-widest transition-all">Security</button>
+                </div>
+              </div>
+            )}
 
             {/* Quick Actions / Digital Money Transfer */}
             <div className="glass-dark border border-white/5 rounded-3xl p-6">
