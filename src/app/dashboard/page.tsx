@@ -9,6 +9,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import AIChat from '@/components/AIChat';
 import SovereignExchange from '@/components/SovereignExchange';
 import AdminCommandCenter from '@/components/AdminCommandCenter';
+import AdminUserAudit from '@/components/AdminUserAudit';
 
 export default function Dashboard() {
   const { currentUser, logout, sendMoney, users } = useAuth();
@@ -16,6 +17,7 @@ export default function Dashboard() {
   
   const [transferEmail, setTransferEmail] = useState('');
   const [transferAmount, setTransferAmount] = useState('');
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [status, setStatus] = useState<{ type: 'success' | 'error', msg: string } | null>(null);
 
   // 3D Tilt Logic
@@ -167,37 +169,48 @@ export default function Dashboard() {
                <div className="flex flex-col gap-8">
                  <AdminCommandCenter />
                  {/* User Management for Admins */}
-                 <div className="glass-dark border border-white/5 rounded-3xl p-8 flex flex-col">
-                    <div className="flex justify-between items-center mb-8">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
-                          <Users className="w-5 h-5 text-gray-400" />
+                 {selectedUserId ? (
+                    <AdminUserAudit 
+                      user={users.find(u => u.email === selectedUserId)} 
+                      onBack={() => setSelectedUserId(null)} 
+                    />
+                 ) : (
+                    <div className="glass-dark border border-white/5 rounded-3xl p-8 flex flex-col">
+                      <div className="flex justify-between items-center mb-8">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+                            <Users className="w-5 h-5 text-gray-400" />
+                          </div>
+                          <h2 className="text-white text-xl font-bold">Client Directory</h2>
                         </div>
-                        <h2 className="text-white text-xl font-bold">Client Directory</h2>
+                        <button className="text-xs font-bold text-gold border border-gold/20 px-4 py-2 rounded-lg hover:bg-gold/10 transition-colors uppercase tracking-widest">Generate Report</button>
                       </div>
-                      <button className="text-xs font-bold text-gold border border-gold/20 px-4 py-2 rounded-lg hover:bg-gold/10 transition-colors uppercase tracking-widest">Generate Report</button>
-                    </div>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left border-collapse">
-                        <thead>
-                          <tr className="border-b border-white/5">
-                            <th className="py-4 text-[10px] text-gray-500 uppercase tracking-widest font-bold">Client Name</th>
-                            <th className="py-4 text-[10px] text-gray-500 uppercase tracking-widest font-bold">Digital Identity</th>
-                            <th className="py-4 text-[10px] text-gray-500 uppercase tracking-widest font-bold text-right">Balance</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-white/5">
-                          {users.filter(u => u.role === 'USER').map((user, i) => (
-                            <tr key={i} className="group hover:bg-white/5 transition-colors">
-                              <td className="py-4 font-bold text-white text-sm">{user.fullName}</td>
-                              <td className="py-4 font-mono text-gray-500 text-xs">{user.email}</td>
-                              <td className="py-4 text-right font-bold text-emerald-400 tracking-tight text-sm">${user.balance.toLocaleString()}</td>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
+                          <thead>
+                            <tr className="border-b border-white/5">
+                              <th className="py-4 text-[10px] text-gray-500 uppercase tracking-widest font-bold">Client Name</th>
+                              <th className="py-4 text-[10px] text-gray-500 uppercase tracking-widest font-bold">Digital Identity</th>
+                              <th className="py-4 text-[10px] text-gray-500 uppercase tracking-widest font-bold text-right">Balance</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody className="divide-y divide-white/5">
+                            {users.filter(u => u.role === 'USER').map((user, i) => (
+                              <tr 
+                                key={i} 
+                                onClick={() => setSelectedUserId(user.email)}
+                                className="group hover:bg-white/5 transition-colors cursor-pointer"
+                              >
+                                <td className="py-4 font-bold text-white text-sm group-hover:text-gold transition-colors">{user.fullName}</td>
+                                <td className="py-4 font-mono text-gray-500 text-xs">{user.email}</td>
+                                <td className="py-4 text-right font-bold text-emerald-400 tracking-tight text-sm">${user.balance.toLocaleString()}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
-                 </div>
+                 )}
                </div>
             ) : (
                <div className="flex flex-col gap-8">
