@@ -52,7 +52,10 @@ export default function HeroVideo() {
         >
           <h1 className="text-6xl md:text-9xl font-bold tracking-tighter mb-6 leading-tight">
             Wealth, <br className="md:hidden" /> 
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold via-[#F7E7CE] to-gold animate-shimmer">Visualized.</span>
+            <span 
+              className="animate-shimmer"
+              style={{ backgroundImage: 'linear-gradient(to right, #D4AF37, #F7E7CE, #D4AF37)' }}
+            >Visualized.</span>
           </h1>
 
           <p className="text-xl md:text-2xl text-gray-200 drop-shadow-lg max-w-3xl mx-auto font-light leading-relaxed mb-12">
@@ -85,7 +88,7 @@ export default function HeroVideo() {
         className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
       >
         <span className="text-[10px] uppercase tracking-[0.3em] text-gray-400 font-bold drop-shadow-md">Discover More</span>
-        <div className="w-px h-12 bg-gradient-to-b from-gold/50 to-transparent" />
+        <div className="w-px h-12" style={{ backgroundImage: 'linear-gradient(to bottom, rgba(212,175,55,0.5), transparent)' }} />
       </motion.div>
     </section>
   );

@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+@theme {
+  --color-gold: #D4AF37;
+  --color-gold-dark: #C5A234;
+  --color-emerald: #064e3b;
+  --color-emerald-light: #10b981;
+}
+
 @layer base {
   :root {
     --background: #ffffff;
@@ -49,6 +56,43 @@
     -webkit-background-clip: text;
     color: transparent;
   }
+
+  /* ── Gold color utilities (explicit, for Tailwind v4 compatibility) ── */
+  .text-gold          { color: #D4AF37; }
+  .bg-gold            { background-color: #D4AF37; }
+  .bg-gold-dark       { background-color: #C5A234; }
+  .border-gold        { border-color: #D4AF37; }
+
+  /* Opacity variants — bg */
+  .bg-gold\/5         { background-color: color-mix(in srgb, #D4AF37  5%, transparent); }
+  .bg-gold\/10        { background-color: color-mix(in srgb, #D4AF37 10%, transparent); }
+  .bg-gold\/20        { background-color: color-mix(in srgb, #D4AF37 20%, transparent); }
+  .bg-gold\/30        { background-color: color-mix(in srgb, #D4AF37 30%, transparent); }
+  .bg-gold\/40        { background-color: color-mix(in srgb, #D4AF37 40%, transparent); }
+  .bg-gold\/50        { background-color: color-mix(in srgb, #D4AF37 50%, transparent); }
+  .bg-gold\/80        { background-color: color-mix(in srgb, #D4AF37 80%, transparent); }
+
+  /* Opacity variants — border */
+  .border-gold\/10    { border-color: color-mix(in srgb, #D4AF37 10%, transparent); }
+  .border-gold\/20    { border-color: color-mix(in srgb, #D4AF37 20%, transparent); }
+  .border-gold\/30    { border-color: color-mix(in srgb, #D4AF37 30%, transparent); }
+  .border-gold\/40    { border-color: color-mix(in srgb, #D4AF37 40%, transparent); }
+  .border-gold\/50    { border-color: color-mix(in srgb, #D4AF37 50%, transparent); }
+
+  /* Opacity variants — text */
+  .text-gold\/50      { color: color-mix(in srgb, #D4AF37 50%, transparent); }
+
+  /* Gradient stops */
+  .from-gold {
+    --tw-gradient-from: #D4AF37 var(--tw-gradient-from-position);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, color-mix(in srgb, #D4AF37 0%, transparent));
+  }
+  .via-gold {
+    --tw-gradient-stops: var(--tw-gradient-from), #D4AF37 var(--tw-gradient-via-position), var(--tw-gradient-to, color-mix(in srgb, #D4AF37 0%, transparent));
+  }
+  .to-gold            { --tw-gradient-to: #D4AF37 var(--tw-gradient-to-position); }
+  .from-gold\/50      { --tw-gradient-from: color-mix(in srgb, #D4AF37 50%, transparent) var(--tw-gradient-from-position); }
+  .to-gold\/80        { --tw-gradient-to: color-mix(in srgb, #D4AF37 80%, transparent) var(--tw-gradient-to-position); }
 }
 
 @keyframes shimmer {

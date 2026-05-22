@@ -12,9 +12,10 @@ export default function MobileNav() {
   const navItems = [
     { icon: Home, label: 'Vault', href: '/dashboard' },
     { icon: ArrowRightLeft, label: 'Ledger', href: '/ledger' },
-    { icon: CreditCard, label: 'Card', href: '#' },
+    { icon: CreditCard, label: 'Card', href: '/profile' },
     { icon: User, label: 'Profile', href: '/profile' },
   ];
+
 
   return (
     <div className="fixed bottom-0 left-0 w-full lg:hidden block z-[150] px-4 pb-4">
