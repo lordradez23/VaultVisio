@@ -84,6 +84,13 @@ export default function Dashboard() {
   };
   const handleMouseLeave = () => { x.set(0); y.set(0); };
 
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!currentUser) {
+      router.push('/login');
+    }
+  }, [currentUser, router]);
+
   // Close bell on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -94,7 +101,6 @@ export default function Dashboard() {
   }, []);
 
   if (!currentUser) {
-    if (typeof window !== 'undefined') router.push('/login');
     return null;
   }
 
