@@ -540,11 +540,10 @@ export default function Dashboard() {
                 <motion.div
                   onMouseMove={handleMouseMove}
                   onMouseLeave={handleMouseLeave}
-                  style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
+                  style={{ rotateX, rotateY, transformStyle: 'preserve-3d', background: 'linear-gradient(135deg, #1a1a1a, #050505)' }}
                   className={`relative h-[220px] w-full rounded-2xl border p-6 flex flex-col justify-between overflow-hidden cursor-pointer shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all ${
                     cardFrozen ? 'border-blue-500/30 opacity-70 grayscale' : 'border-white/10'
                   }`}
-                  style={{ background: 'linear-gradient(135deg, #1a1a1a, #050505)' }}
                 >
                   <div className="absolute inset-0 border border-gold/0 group-hover:border-gold/20 transition-colors rounded-2xl pointer-events-none" />
                   <motion.div style={{ x: shimmerX, transformStyle: 'preserve-3d' }}
