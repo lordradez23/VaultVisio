@@ -5,7 +5,7 @@ import Link from 'next/link';
 import {
   ArrowLeft, Bell, Search, Sparkles, Send, ArrowUpRight, ArrowDownRight,
   RefreshCw, ShieldCheck, Zap, LogOut, Users, Settings, Activity,
-  CreditCard, X, ChevronDown, Eye, EyeOff, Loader2, Lock, Unlock
+  CreditCard, X, ChevronDown, Eye, EyeOff, Loader2, Lock, Unlock, Database
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/components/Toast';
@@ -45,7 +45,7 @@ const CHART_PATHS: Record<string, { area: string; line: string }> = {
 };
 
 export default function Dashboard() {
-  const { currentUser, logout, sendMoney, users, addBalance } = useAuth();
+  const { currentUser, logout, sendMoney, users, addBalance, transactions } = useAuth();
   const { toast } = useToast();
   const router = useRouter();
 
@@ -318,6 +318,43 @@ export default function Dashboard() {
           )}
         </div>
 
+        {/* System Health Bar */}
+        {isAdmin && (
+          <div className="glass-dark border border-white/5 rounded-3xl p-6 flex flex-col md:flex-row items-center gap-6 md:gap-12 justify-between">
+            <div className="w-full md:w-auto">
+              <h3 className="text-white font-bold text-sm mb-1">Global System Health</h3>
+              <p className="text-gray-500 text-[10px] uppercase tracking-widest font-bold">All clusters optimal</p>
+            </div>
+            
+            <div className="flex-1 w-full grid grid-cols-3 gap-6">
+              {[
+                { label: 'CPU Load', value: '12%', color: 'from-emerald-500 to-emerald-300' },
+                { label: 'Memory', value: '44%', color: 'from-blue-500 to-blue-300' },
+                { label: 'Latency', value: '18ms', color: 'from-emerald-500 to-emerald-300' },
+              ].map((stat, i) => (
+                <div key={i} className="flex flex-col gap-2">
+                  <div className="flex justify-between items-center text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+                    <span>{stat.label}</span>
+                    <span className="text-white">{stat.value}</span>
+                  </div>
+                  <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                    <div className={`h-full rounded-full bg-gradient-to-r ${stat.color}`} style={{ width: stat.value === '18ms' ? '18%' : stat.value }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="hidden lg:flex items-center gap-2">
+              {['Geneva', 'Singapore', 'New York', 'London'].map((city, i) => (
+                <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+                  <div className={`w-1.5 h-1.5 rounded-full ${i === 1 ? 'bg-orange-500 animate-pulse' : 'bg-emerald-500'}`} />
+                  <span className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">{city}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
@@ -355,11 +392,17 @@ export default function Dashboard() {
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
-                          {users.filter(u => u.role === 'USER').map((user, i) => (
+                          {users
+                            .filter(u => u.role === 'USER')
+                            .filter(u => metricMatches(u.fullName) || metricMatches(u.email))
+                            .map((user, i) => (
                             <tr key={i} onClick={() => setSelectedUserId(user.email)} className="group hover:bg-white/5 transition-colors cursor-pointer">
-                              <td className="py-4 font-bold text-white text-sm group-hover:text-gold transition-colors">{user.fullName}</td>
+                              <td className="py-4 font-bold text-white text-sm group-hover:text-gold transition-colors flex items-center gap-2">
+                                <div className={`w-1.5 h-1.5 rounded-full ${user.suspended ? 'bg-red-500' : 'bg-emerald-500'}`} />
+                                {user.fullName}
+                              </td>
                               <td className="py-4 font-mono text-gray-500 text-xs">{user.email}</td>
-                              <td className="py-4 text-right font-bold text-emerald-400 tracking-tight text-sm">${user.balance.toLocaleString()}</td>
+                              <td className="py-4 text-right font-bold tracking-tight text-sm text-white">${user.balance.toLocaleString()}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -672,14 +715,36 @@ export default function Dashboard() {
               </div>
             )}
 
-            {/* Transfer / System Settings */}
+            {/* Global Transaction Feed & Settings */}
+            {isAdmin && (
+              <div className="glass-dark border border-white/5 rounded-3xl p-6 mb-8">
+                <h2 className="text-white font-bold mb-4">Global Transaction Feed</h2>
+                <div className="space-y-3 h-64 overflow-y-auto pr-2">
+                  {transactions.slice(0, 10).map((tx, i) => (
+                    <div key={i} className="flex justify-between items-center bg-white/5 border border-white/5 rounded-xl p-3">
+                      <div>
+                        <p className="text-white text-[11px] font-bold">{tx.name}</p>
+                        <p className="text-gray-500 text-[9px] font-mono">{tx.id} • {tx.toFrom}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className={tx.type === 'in' ? 'text-emerald-400 text-xs font-bold' : 'text-red-400 text-xs font-bold'}>{tx.amount}</p>
+                        <p className="text-gray-500 text-[9px] italic">{tx.date}</p>
+                      </div>
+                    </div>
+                  ))}
+                  {transactions.length === 0 && <p className="text-gray-500 text-xs italic">No transactions</p>}
+                </div>
+              </div>
+            )}
+
             <div className="glass-dark border border-white/5 rounded-3xl p-6">
-              <h2 className="text-white font-bold mb-4">{isAdmin ? 'System Settings' : 'Intelligence Transfer'}</h2>
+              <h2 className="text-white font-bold mb-4">{isAdmin ? 'Quick Actions' : 'Intelligence Transfer'}</h2>
               {isAdmin ? (
                 <div className="space-y-3">
                   {[
                     { label: 'Audit System Logs', icon: Settings, key: 'audit', msg: 'Audit log exported → system_audit_2026.csv' },
                     { label: 'Network Maintenance', icon: RefreshCw, key: 'network', msg: 'Network maintenance cycle initiated — ETA 30s' },
+                    { label: 'Export Global Ledger', icon: Database, key: 'ledger', msg: 'Global ledger exported to secure vault' },
                   ].map(({ label, icon: Icon, key, msg }) => (
                     <button
                       key={key}

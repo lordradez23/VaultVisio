@@ -2,7 +2,10 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Shield, User, Globe, Activity, Lock, Unlock, CreditCard } from 'lucide-react';
+import { ArrowLeft, Shield, User, Globe, Activity, Lock, Unlock, CreditCard, DollarSign } from 'lucide-react';
+import { useAuth, Transaction } from '@/context/AuthContext';
+import { useToast } from '@/components/Toast';
+import { useState } from 'react';
 
 interface AdminUserAuditProps {
   user: any;
@@ -10,7 +13,23 @@ interface AdminUserAuditProps {
 }
 
 export default function AdminUserAudit({ user, onBack }: AdminUserAuditProps) {
+  const { suspendUser, adjustBalance, transactions } = useAuth();
+  const { toast } = useToast();
+  const [amount, setAmount] = useState('');
+
   if (!user) return null;
+  
+  const userTxns = transactions.filter(t => t.toFrom === user.email || t.toFrom === 'VaultVisio System' || t.toFrom === 'Command Center' || t.toFrom === 'AI Engine');
+
+  const handleAdjust = (e: React.FormEvent) => {
+    e.preventDefault();
+    const val = parseFloat(amount);
+    if (!isNaN(val)) {
+      adjustBalance(user.email, val);
+      toast(`Adjusted balance by $${val.toLocaleString()}`, val >= 0 ? 'success' : 'warning');
+      setAmount('');
+    }
+  };
 
   return (
     <motion.div 
@@ -26,8 +45,8 @@ export default function AdminUserAudit({ user, onBack }: AdminUserAuditProps) {
             <ArrowLeft className="w-4 h-4" />
             Back to Directory
         </button>
-        <div className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] text-emerald-400 font-bold uppercase tracking-widest">
-            Client Profile: Active
+        <div className={`px-3 py-1 rounded-full border text-[10px] font-bold uppercase tracking-widest ${user.suspended ? 'bg-red-500/10 border-red-500/20 text-red-500' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'}`}>
+            Client Profile: {user.suspended ? 'Suspended' : 'Active'}
         </div>
       </div>
 
@@ -59,19 +78,19 @@ export default function AdminUserAudit({ user, onBack }: AdminUserAuditProps) {
                 <h3 className="text-white text-sm font-bold uppercase tracking-widest">Access Logs</h3>
             </div>
             <div className="space-y-4">
-                {[
-                    { event: "Identity Handshake", node: "Geneva-01", time: "2m ago" },
-                    { event: "Sovereign Sweep", node: "Global-AI", time: "1h ago" },
-                    { event: "Exchange Authorization", node: "Singapore-02", time: "3h ago" },
-                ].map((log, i) => (
+                {userTxns.slice(0, 5).map((log, i) => (
                     <div key={i} className="flex justify-between items-center text-[10px] font-mono">
                         <div className="flex flex-col">
-                            <span className="text-white">{log.event}</span>
-                            <span className="text-gray-600">Node: {log.node}</span>
+                            <span className="text-white">{log.name}</span>
+                            <span className="text-gray-600">ID: {log.id}</span>
                         </div>
-                        <span className="text-gray-500 italic">{log.time}</span>
+                        <div className="text-right flex flex-col">
+                            <span className={log.type === 'in' ? 'text-emerald-400' : 'text-red-400'}>{log.amount}</span>
+                            <span className="text-gray-500 italic">{log.date}</span>
+                        </div>
                     </div>
                 ))}
+                {userTxns.length === 0 && <span className="text-gray-500 italic text-xs">No recent activity found.</span>}
             </div>
         </div>
 
@@ -81,16 +100,34 @@ export default function AdminUserAudit({ user, onBack }: AdminUserAuditProps) {
                 <Shield className="w-4 h-4 text-emerald-400" />
                 <h3 className="text-white text-sm font-bold uppercase tracking-widest">Administrative Actions</h3>
             </div>
-            <div className="grid grid-cols-1 gap-2">
-                <button className="py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-bold uppercase hover:bg-red-500 hover:text-white transition-all flex items-center justify-center gap-2">
-                    <Lock className="w-3 h-3" /> Terminate Access
-                </button>
-                <button className="py-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 text-[10px] font-bold uppercase hover:bg-white/10 transition-all flex items-center justify-center gap-2">
-                    <CreditCard className="w-3 h-3" /> Re-Issue Card
-                </button>
-                <button className="py-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 text-[10px] font-bold uppercase hover:bg-white/10 transition-all flex items-center justify-center gap-2">
-                    <Globe className="w-3 h-3" /> Shift Jurisdictional Node
-                </button>
+            <div className="space-y-4">
+                <form onSubmit={handleAdjust} className="flex gap-2">
+                    <input 
+                      type="number" 
+                      value={amount} 
+                      onChange={e => setAmount(e.target.value)}
+                      placeholder="e.g. 500 or -500"
+                      className="bg-black/50 border border-white/10 rounded-xl px-4 py-2 flex-1 text-xs text-white focus:outline-none focus:border-gold/50"
+                    />
+                    <button type="submit" className="px-4 py-2 bg-gold/10 text-gold border border-gold/30 rounded-xl text-[10px] uppercase tracking-widest font-bold hover:bg-gold hover:text-black transition-colors">
+                        Post Adjustment
+                    </button>
+                </form>
+            
+                <div className="grid grid-cols-1 gap-2">
+                    <button 
+                        onClick={() => { suspendUser(user.email); toast(user.suspended ? 'User access restored' : 'User access suspended', user.suspended ? 'success' : 'error'); }}
+                        className={`py-3 rounded-xl border text-[10px] font-bold uppercase transition-all flex items-center justify-center gap-2 ${user.suspended ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-white' : 'bg-red-500/10 border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white'}`}>
+                        {user.suspended ? <Unlock className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
+                        {user.suspended ? 'Restore Access' : 'Terminate Access'}
+                    </button>
+                    <button onClick={() => toast('Re-issuing new Sovereign Card to client address', 'info')} className="py-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 text-[10px] font-bold uppercase hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+                        <CreditCard className="w-3 h-3" /> Re-Issue Card
+                    </button>
+                    <button onClick={() => toast('Jurisdictional node shifted successfully', 'success')} className="py-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 text-[10px] font-bold uppercase hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+                        <Globe className="w-3 h-3" /> Shift Jurisdictional Node
+                    </button>
+                </div>
             </div>
         </div>
       </div>

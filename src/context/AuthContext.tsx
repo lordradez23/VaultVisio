@@ -21,6 +21,7 @@ export interface User {
   email: string;
   role: Role;
   balance: number;
+  suspended?: boolean;
 }
 
 interface AuthContextType {
@@ -32,6 +33,8 @@ interface AuthContextType {
   logout: () => void;
   sendMoney: (toEmail: string, amount: number) => boolean;
   addBalance: (amount: number) => void;
+  suspendUser: (email: string) => void;
+  adjustBalance: (email: string, amount: number) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -55,10 +58,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const initialUsers: User[] = savedUsers ? JSON.parse(savedUsers) : [];
 
     const adminExists = initialUsers.find(u => u.email === ADMIN_EMAIL);
-    const finalUsers = adminExists ? initialUsers : [
-      { id: 'admin-0', fullName: 'System Administrator', email: ADMIN_EMAIL, role: 'ADMIN' as Role, balance: 1000000 },
-      ...initialUsers
-    ];
+    const hasDemoUsers = initialUsers.find(u => u.email === 'marcus.v@example.com');
+    
+    let finalUsers = initialUsers;
+    if (!adminExists) {
+      finalUsers = [
+        { id: 'admin-0', fullName: 'System Administrator', email: ADMIN_EMAIL, role: 'ADMIN' as Role, balance: 1000000 },
+        ...finalUsers
+      ];
+    }
+    
+    if (!hasDemoUsers) {
+      const demoUsers: User[] = [
+        { id: 'demo-1', fullName: 'Marcus Vance', email: 'marcus.v@example.com', role: 'USER', balance: 1250420 },
+        { id: 'demo-2', fullName: 'Elena Rodriguez', email: 'erodriguez@sovereign.io', role: 'USER', balance: 450200 },
+        { id: 'demo-3', fullName: 'James Sterling', email: 'jsterling@wealth.net', role: 'USER', balance: 8920 },
+        { id: 'demo-4', fullName: 'Olivia Chen', email: 'olivia.chen@global.org', role: 'USER', balance: 9450000, suspended: true },
+        { id: 'demo-5', fullName: 'Liam Fitzpatrick', email: 'liam.f@holdings.co', role: 'USER', balance: 250000 },
+      ];
+      finalUsers = [...finalUsers, ...demoUsers];
+    }
 
     setUsers(finalUsers);
     setTransactions(savedTxns ? JSON.parse(savedTxns) : []);
@@ -152,8 +171,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setTransactions(prev => [tx, ...prev]);
   };
 
+  const suspendUser = (email: string) => {
+    setUsers(prev => prev.map(u => 
+      u.email === email ? { ...u, suspended: !u.suspended } : u
+    ));
+  };
+
+  const adjustBalance = (email: string, amount: number) => {
+    setUsers(prev => prev.map(u => 
+      u.email === email ? { ...u, balance: Math.max(0, u.balance + amount) } : u
+    ));
+    
+    const tx: Transaction = {
+      id: `TX-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
+      name: 'Administrative Adjustment',
+      desc: 'System Master Override',
+      amount: `${amount >= 0 ? '+' : '-'}$${Math.abs(amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
+      type: amount >= 0 ? 'in' : 'out',
+      date: formatDate(new Date()),
+      status: 'Completed',
+      toFrom: 'Command Center',
+    };
+    setTransactions(prev => [tx, ...prev]);
+  };
+
   return (
-    <AuthContext.Provider value={{ currentUser, users, transactions, login, register, logout, sendMoney, addBalance }}>
+    <AuthContext.Provider value={{ currentUser, users, transactions, login, register, logout, sendMoney, addBalance, suspendUser, adjustBalance }}>
       {children}
     </AuthContext.Provider>
   );

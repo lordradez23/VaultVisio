@@ -43,7 +43,7 @@ export default function AdminCommandCenter() {
 
   return (
     <div className="glass-dark border border-white/5 rounded-3xl p-8 flex flex-col gap-8 relative overflow-hidden">
-      <div className={`absolute top-0 right-0 w-64 h-64 blur-[100px] rounded-full transition-colors duration-1000 ${isSystemLocked ? 'bg-red-500/20' : 'bg-emerald-500/10'}`} />
+      <div className={`absolute top-0 right-0 w-64 h-64 blur-[100px] rounded-full transition-colors duration-1000 z-0 pointer-events-none ${isSystemLocked ? 'bg-red-500/20' : 'bg-emerald-500/10'}`} />
 
       <div className="flex justify-between items-start relative z-10">
         <div>
