@@ -45,6 +45,12 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
+  .glass-subtle {
+    backdrop-filter: blur(8px);
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
   .text-shadow-gold {
     text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
   }
@@ -55,6 +61,18 @@
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-skeleton {
+    animation: skeleton 1.5s ease-in-out infinite;
   }
 
   /* ── Gold color utilities (explicit, for Tailwind v4 compatibility) ── */
@@ -108,6 +126,21 @@
   100% { transform: translateY(400px); opacity: 0; }
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes skeleton {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -119,6 +152,20 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #D4AF37;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C5A234;
 }
 
 ::selection {
